@@ -28,7 +28,7 @@ export default defineConfig({
   use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 1000 }, baseURL, trace: "retain-on-failure" },
   webServer: {
     command: `npm run build -- --webpack && npx next start -H 127.0.0.1 -p 3101`,
-    url: `${baseURL}/demo`,
+    url: baseURL,
     env: childEnv,
     reuseExistingServer: false,
     timeout: 180_000,

@@ -4,7 +4,7 @@ Horizon is a personal portfolio tracker for people who hold investments across s
 
 ![A short tour: the overview with a year's figures, the positions filtered to ETFs, and the New entry form filled in](docs/images/tour.gif)
 
-All portfolio data shown in these images is invented. The images show the fuller application UI; the interactive demo focuses on the dashboard and a core buy or sell flow.
+All data shown in the screenshots and preview is fictional. The screenshots show the full Horizon interface; the preview uses these same screens with read-only sample data.
 
 | | |
 | :---: | :---: |
@@ -13,7 +13,7 @@ All portfolio data shown in these images is invented. The images show the fuller
 
 ## Try the demo
 
-The demo is a small, guided version of Horizon. It needs no account or database. Sample data and changes stay in the current browser tab. The demo sends no request to an external service, and **Reset demo** restores the starting data.
+The preview uses the full Horizon interface in read-only mode. No account or database is required, and it uses fictional data without making requests to external services. **Reset demo** clears display preferences and returns to the overview.
 
 To run it locally:
 
@@ -22,14 +22,14 @@ npm ci
 DEMO_MODE=true NEXT_PUBLIC_DEMO_MODE=true npm run dev
 ```
 
-Then open [http://localhost:3100/demo](http://localhost:3100/demo).
+Then open [http://localhost:3100](http://localhost:3100).
 
 ## Product and engineering decisions
 
 - **Start from the user's task.** The main entry flow records a buy or sale and keeps related account and instrument details close to the form.
 - **Keep estimates visible.** Prices and exchange rates are logged over time; portfolio results are labelled as analysis estimates, not tax figures.
 - **Measure before integrating.** External data sources were probed before their behaviour shaped the application, and invented responses are used in tests.
-- **Separate the showcase from account data.** The demo uses browser session storage and bundled sample prices. It does not call the authenticated application, Supabase, or external providers.
+- **Separate the showcase from account data.** The preview uses the application's actual screens with bundled fictional data. It blocks write requests and does not call Supabase or external providers.
 
 The application code also includes a Supabase-backed mode. Its access model uses verified TOTP and database Row Level Security. Database tests reject any target whose hostname is not a loopback address, and CI starts a disposable local Supabase instance for those tests.
 
@@ -69,4 +69,4 @@ Released under the MIT Licence. See [LICENSE](LICENSE).
 
 A Horizon személyes portfóliókövető, amellyel több számlán, devizában és eszközosztályban tartott befektetés követhető egy helyen. Megjeleníti az állományokat, a számlapénzt, a tranzakciókat és a portfólió alakulását.
 
-A demo fiók és adatbázis nélkül próbálható ki: mintaadatokat használ, a módosítások az aktuális böngészőlap munkamenetében maradnak, és nem küld kérést külső szolgáltatásnak. A teljes alkalmazás Next.js App Router, TypeScript, Supabase és PostgreSQL technológiákra épül; a hitelesítést ellenőrzött TOTP-kód, az adatbázishozzáférést Row Level Security védi.
+A demó a Horizon tényleges képernyőit mutatja kitalált adatokkal, csak olvasható módban. Nem kell hozzá fiók vagy adatbázis, nem kapcsolódik külső szolgáltatáshoz, és az írási kéréseket letiltja. A „Demó visszaállítása” törli a megjelenítési beállításokat, és visszatér az Áttekintéshez. Az éles alkalmazás Next.js App Router, TypeScript, Supabase és PostgreSQL technológiákra épül; a hitelesítést ellenőrzött TOTP-kód, az adatbázis-hozzáférést Row Level Security védi.

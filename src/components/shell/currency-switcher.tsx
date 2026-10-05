@@ -5,7 +5,7 @@ import { useI18n } from "../i18n-provider";
 import { type ServerAction, useServerForm } from "../server-form";
 
 /** HUF / EUR / USD for every total on screen (plan §7). Stored in a cookie by a server action. */
-export function CurrencySwitcher({ current, action }: { current: DisplayCurrency; action: ServerAction }) {
+export function CurrencySwitcher({ current, action, disabled = false }: { current: DisplayCurrency; action: ServerAction; disabled?: boolean }) {
   const { m } = useI18n();
   const [selected, setSelected] = useState(current);
   const form = useServerForm(action);
@@ -19,6 +19,7 @@ export function CurrencySwitcher({ current, action }: { current: DisplayCurrency
             type="submit"
             name="currency"
             value={c}
+            disabled={disabled}
             aria-pressed={selected === c}
             onClick={() => setSelected(c)}
             className={`rounded-lg px-2.5 py-1 font-medium ${selected === c ? "bg-card text-accent shadow-sm" : "text-text-muted hover:text-text"}`}

@@ -9,11 +9,13 @@ import { CurrencySwitcher } from "./currency-switcher";
 import { CurrentWeather } from "./current-weather";
 import { PrivacyToggle } from "./privacy-toggle";
 import { DayNight } from "./weather";
+import { readAppMode } from "@/lib/demo/config";
 
 export async function Header({ prefs }: { prefs: Prefs }) {
   const i18n = await getI18n();
   const { m, f } = i18n;
   const today = todayInBudapest();
+  const demo = readAppMode(process.env).demo;
   return (
     <header className="flex flex-wrap items-center justify-between gap-3 py-5">
       <div>
@@ -31,7 +33,7 @@ export async function Header({ prefs }: { prefs: Prefs }) {
         </p>
       </div>
       <div className="flex items-center gap-2">
-        <CurrencySwitcher key={prefs.currency} current={prefs.currency} action={setDisplayCurrency} />
+        <CurrencySwitcher key={prefs.currency} current={prefs.currency} action={setDisplayCurrency} disabled={demo} />
         <PrivacyToggle initial={prefs.privacy} />
       </div>
     </header>

@@ -5,6 +5,7 @@ import { i18nFor } from "@/lib/i18n";
 const english = {
   pageTitle: "Interactive portfolio demo",
   tagline: "A personal portfolio tracker for every account, currency and asset class.",
+  readonlyNotice: "This preview uses fictional data and is read-only.",
   demoNotice: "Sample data only. Changes stay in this tab and are cleared when the session ends.",
   memoryNotice: "Sample data only. Changes stay in memory for this visit and are cleared when you leave.",
   reset: "Reset demo",
@@ -52,6 +53,7 @@ const english = {
 const hungarian = {
   pageTitle: "Interaktív portfóliódemó",
   tagline: "Személyes portfóliókövető minden számlához, devizához és eszközosztályhoz.",
+  readonlyNotice: "Ez az előnézet kitalált adatokat használ, és csak olvasható.",
   demoNotice: "Csak mintaadatok. A változások ebben a lapban maradnak, és a munkamenet végén törlődnek.",
   memoryNotice: "Csak mintaadatok. A változások csak erre a látogatásra maradnak meg a memóriában.",
   reset: "Demó visszaállítása",

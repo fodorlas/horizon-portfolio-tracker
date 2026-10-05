@@ -6,6 +6,7 @@ import { Badge, ButtonLink, Card, PageHeader } from "@/components/ui";
 import { getI18n } from "@/lib/i18n-server";
 import { getPrefs } from "@/lib/prefs";
 import { createClient } from "@/lib/supabase/server";
+import { readAppMode } from "@/lib/demo/config";
 import { setDisplayCurrency, setLanguage, setTheme } from "../prefs-actions";
 import { exportData } from "./actions";
 import { ExportPanel } from "./export-panel";
@@ -21,8 +22,9 @@ export default async function SettingsPage() {
   const { m, fill } = await getI18n();
   const t = m.settings;
   const prefs = await getPrefs();
-  const { data } = await (await createClient()).auth.mfa.listFactors();
-  const factors = data?.all.filter((f) => f.factor_type === "totp") ?? [];
+  const factors = readAppMode(process.env).demo
+    ? []
+    : (await (await createClient()).auth.mfa.listFactors()).data?.all.filter((f) => f.factor_type === "totp") ?? [];
 
   return (
     <>
