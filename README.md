@@ -15,7 +15,7 @@ All data shown in the screenshots and preview is fictional. The screenshots show
 
 **[Open the live demo on Vercel](https://horizon-portfolio-tracker.vercel.app/)** to explore Horizon in your browser without installing anything.
 
-The preview uses the full Horizon interface in read-only mode. No account or database is required, and it uses fictional data without making requests to external services. **Reset demo** clears display preferences and returns to the overview.
+The demo runs on Vercel and shows the full Horizon interface with fictional, read-only portfolio data. Vercel serves the pages to your browser; the sample data is bundled with the application. No account or database is needed, and the demo does not request data from Supabase or external market data providers. Requests to change portfolio data are blocked. **Reset demo** clears display preferences and returns to the overview.
 
 ## Product and engineering decisions
 
@@ -73,4 +73,4 @@ Released under the MIT Licence. See [LICENSE](LICENSE).
 
 A Horizon személyes portfóliókövető, amellyel több számlán, devizában és eszközosztályban tartott befektetés követhető egy helyen. Megjeleníti az állományokat, a számlapénzt, a tranzakciókat és a portfólió alakulását.
 
-A [Vercelen elérhető böngészős demó](https://horizon-portfolio-tracker.vercel.app/) a Horizon tényleges képernyőit mutatja kitalált adatokkal, csak olvasható módban. Nem kell hozzá fiók vagy adatbázis, nem kapcsolódik külső szolgáltatáshoz, és az írási kéréseket letiltja. A „Demó visszaállítása” törli a megjelenítési beállításokat, és visszatér az Áttekintéshez. Az éles alkalmazás Next.js App Router, TypeScript, Supabase és PostgreSQL technológiákra épül; a hitelesítést ellenőrzött TOTP-kód, az adatbázis-hozzáférést Row Level Security védi.
+A [Vercelen futó böngészős demó](https://horizon-portfolio-tracker.vercel.app/) a Horizon tényleges képernyőit mutatja kitalált, csak olvasható portfólióadatokkal. Az oldalakat a Vercel szolgálja ki a böngésződnek; a mintaadatok az alkalmazás részei. Nem kell hozzá fiók vagy adatbázis, és a demó nem kér adatot a Supabase-től vagy külső piaciadat-szolgáltatóktól. A portfólióadatokat módosító kéréseket letiltja. A „Demó visszaállítása” törli a megjelenítési beállításokat, és visszatér az Áttekintéshez. Az éles alkalmazás Next.js App Router, TypeScript, Supabase és PostgreSQL technológiákra épül; a hitelesítést ellenőrzött TOTP-kód, az adatbázis-hozzáférést Row Level Security védi.
