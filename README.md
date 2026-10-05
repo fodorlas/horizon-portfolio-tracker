@@ -2,13 +2,14 @@
 
 Horizon is a personal portfolio tracker for people who hold investments across several accounts, currencies and asset classes. It brings holdings, account cash, transactions and portfolio history into one view.
 
-![A tour of the fuller application: portfolio overview, filtered positions and a sample entry form](docs/images/tour.gif)
+![A short tour: the overview with a year's figures, the positions filtered to ETFs, and the New entry form filled in](docs/images/tour.gif)
 
-Portfolio figures, account names and transactions shown in the tour and screenshots are invented. Some securities have real names; all displayed holdings and prices are illustrative. The GIF documents the fuller application UI; the interactive demo focuses on the dashboard and a core buy or sell flow.
+All portfolio data shown in these images is invented. The images show the fuller application UI; the interactive demo focuses on the dashboard and a core buy or sell flow.
 
-![Interactive demo dashboard with portfolio value, cash, allocation and history](docs/screenshots/demo-dashboard.png)
-
-![The demo's trade form with a sample buy selected](docs/screenshots/demo-trade-form.png)
+| | |
+| :---: | :---: |
+| ![Overview: total wealth, the investment result, net flow and return over a year, and the value over time](docs/images/overview.png) | ![Positions: every holding with its account, units, price, value, cost basis and gain](docs/images/positions.png) |
+| ![Transactions: a dividend, buys, deposits and currency exchanges, with a filter by kind and account](docs/images/transactions.png) | ![Prices and FX rates: each instrument's logged daily prices with their source, status and note](docs/images/prices.png) |
 
 ## Try the demo
 
