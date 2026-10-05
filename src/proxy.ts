@@ -37,10 +37,15 @@ export async function proxy(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
   if (demo) {
-    const decision = demoRequestDecision(request.nextUrl.pathname, true);
+    const decision = demoRequestDecision(request.nextUrl.pathname, true, request.method);
     const csp = demoSecurityPolicy(nonce, process.env.NODE_ENV === "development");
     if (decision.kind === "redirect") {
       const response = NextResponse.redirect(new URL(decision.to, request.url));
+      response.headers.set("Content-Security-Policy", csp);
+      return response;
+    }
+    if (decision.kind === "block") {
+      const response = NextResponse.json({ error: "demo_read_only" }, { status: 405 });
       response.headers.set("Content-Security-Policy", csp);
       return response;
     }

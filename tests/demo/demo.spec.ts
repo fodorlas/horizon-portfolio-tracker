@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("opens the English sample portfolio, records a trade, resets, and makes no external requests", async ({ page }, testInfo) => {
+test("shows the Horizon app shell and sample-data screens without external requests", async ({ page }, testInfo) => {
   const externalRequests: string[] = [];
   const appOrigin = new URL(testInfo.project.use.baseURL as string).origin;
   page.context().on("request", (request) => {
@@ -8,43 +8,48 @@ test("opens the English sample portfolio, records a trade, resets, and makes no 
   });
 
   await page.goto("/");
-  await expect(page).toHaveURL(/\/demo$/);
-  await expect(page.getByRole("heading", { level: 1, name: "Interactive portfolio demo" })).toBeVisible();
+  await expect(page).toHaveURL(`${appOrigin}/`);
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
-  await expect(page.getByText("Sample prices").first()).toBeVisible();
+  await expect(page.getByRole("link", { name: "Horizon" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Overview" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "New entry" })).toBeVisible();
+  await expect(page.getByText("Total wealth")).toBeVisible();
+  await expect(page.getByText("Value over time")).toBeVisible();
+  await page.screenshot({ path: testInfo.outputPath("demo-overview.png") });
 
-  const language = page.locator("#demo-language");
-  await language.selectOption("hu");
-  await expect(page.locator("html")).toHaveAttribute("lang", "hu");
-  await page.reload();
-  await expect(page.locator("html")).toHaveAttribute("lang", "hu");
-  await language.selectOption("en");
+  await page.getByRole("link", { name: "Positions" }).first().click();
+  await expect(page).toHaveURL(/\/positions$/);
+  await expect(page.getByRole("heading", { level: 1, name: "Positions" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 2, name: "Securities and other instruments" })).toBeVisible();
+
+  await page.getByRole("link", { name: "Transactions" }).first().click();
+  await expect(page).toHaveURL(/\/transactions$/);
+  await expect(page.getByRole("heading", { level: 1, name: "Transactions" })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "Long-term savings" }).first()).toBeVisible();
+
+  for (const [path, title] of [
+    ["/accounts", "Accounts"],
+    ["/instruments", "Instruments"],
+    ["/prices", "Prices and FX rates"],
+    ["/settings", "Settings"],
+  ]) {
+    await page.goto(path);
+    await expect(page.getByRole("heading", { level: 1, name: title })).toBeVisible();
+    await expect(page.getByText("This preview uses fictional data and is read-only.")).toBeVisible();
+  }
+
   expect(await page.context().cookies()).toEqual([]);
-  const secondTab = await page.context().newPage();
-  await secondTab.goto("/");
-  await expect(secondTab.locator("html")).toHaveAttribute("lang", "en");
-  await secondTab.close();
 
-  const total = page.getByTestId("portfolio-value");
-  const cash = page.getByTestId("cash-value");
-  const startingTotal = await total.textContent();
-  const startingCash = await cash.textContent();
-  await page.screenshot({ path: testInfo.outputPath("demo-dashboard.png") });
-
-  await page.setViewportSize({ width: 900, height: 1200 });
-  await page.getByLabel("Units (OTP)").fill("2");
-  await page.getByLabel("Trade price (HUF)").fill("34000");
-  await page.getByRole("heading", { level: 2, name: "Record a trade" }).locator("xpath=../..").screenshot({ path: testInfo.outputPath("demo-trade-form.png") });
-  await page.getByRole("button", { name: "Save trade" }).click();
-  await expect(page.getByRole("status")).toHaveText("Trade added to this demo session.");
-  await expect(total).not.toHaveText(startingTotal ?? "");
-  await expect(cash).not.toHaveText(startingCash ?? "");
-
+  await page.context().addCookies([{ name: "horizon_ccy", value: "EUR", url: appOrigin }]);
+  await page.goto("/");
+  await expect(page.getByRole("button", { name: "EUR" })).toHaveAttribute("aria-pressed", "true");
   await page.getByRole("button", { name: "Reset demo" }).click();
-  await expect(total).toHaveText(startingTotal ?? "");
-  await expect(cash).toHaveText(startingCash ?? "");
+  await expect(page).toHaveURL(`${appOrigin}/`);
+  expect(await page.context().cookies()).toEqual([]);
   await page.reload();
-  await expect(total).toHaveText(startingTotal ?? "");
-  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  await expect(page.getByRole("button", { name: "HUF" })).toHaveAttribute("aria-pressed", "true");
+
+  const blockedWrite = await page.request.post(`${appOrigin}/transactions`, { data: { kind: "buy" } });
+  expect(blockedWrite.status()).toBe(405);
   expect(externalRequests).toEqual([]);
 });

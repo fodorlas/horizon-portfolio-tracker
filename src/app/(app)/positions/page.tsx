@@ -13,6 +13,7 @@ import { type BondFlag, bondFlags } from "@/lib/views/pending";
 import { type PositionRow, positions } from "@/lib/views/portfolio";
 import { filterPositions, isFiltered, parsePositionFilter, POSITION_TYPES, type PositionFilter } from "@/lib/views/position-filter";
 import { createClient } from "@/lib/supabase/server";
+import { readAppMode } from "@/lib/demo/config";
 import { UpdateValue } from "../prices/update-value";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -31,7 +32,7 @@ export default async function PositionsPage({ searchParams }: PageProps<"/positi
   const today = todayInBudapest();
   const model = positions(data, today, prefs.currency);
   const names = nameMaps(data);
-  const bonds = await loadBondFacts(await createClient(), data);
+  const bonds = readAppMode(process.env).demo ? [] : await loadBondFacts(await createClient(), data);
   const flags = bondFlags({ today, bonds, positions: model.positions, rows: pending });
   const flagsOf = (p: PositionRow) => flags.get(`${p.accountId}|${p.instrumentId}`) ?? [];
   const ccy = model.currency;

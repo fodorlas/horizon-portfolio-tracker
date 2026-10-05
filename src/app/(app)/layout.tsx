@@ -5,6 +5,9 @@ import { Sidebar } from "@/components/shell/sidebar";
 import { getI18n } from "@/lib/i18n-server";
 import { getPrefs } from "@/lib/prefs";
 import { createClient } from "@/lib/supabase/server";
+import { readAppMode } from "@/lib/demo/config";
+import { DemoNotice } from "@/demo/demo-notice";
+import { DemoResetButton } from "@/demo/reset-button";
 
 type SessionStatus = { is_owner: boolean; aal2: boolean; trusted: boolean };
 
@@ -14,12 +17,11 @@ type SessionStatus = { is_owner: boolean; aal2: boolean; trusted: boolean };
  * no page is shown at all – RLS would return nothing anyway.
  */
 export default async function AppLayout({ children }: LayoutProps<"/">) {
-  const supabase = await createClient();
-  const { data } = await supabase.rpc("session_status");
-  const status = (data ?? { is_owner: false, aal2: false, trusted: false }) as SessionStatus;
+  const demo = readAppMode(process.env).demo;
+  const status = demo ? { is_owner: true, aal2: true, trusted: true } : await loadSessionStatus();
   const [prefs, { m }] = await Promise.all([getPrefs(), getI18n()]);
 
-  if (!status.is_owner || !status.trusted) {
+  if (!demo && (!status.is_owner || !status.trusted)) {
     return (
       <main className="flex flex-1 items-center justify-center px-4 py-16">
         <section className="w-full max-w-xl rounded-3xl border border-border bg-card p-8 shadow-card sm:p-10">
@@ -43,17 +45,24 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
       >
         {m.nav.skip}
       </a>
-      <Sidebar footer={<LogoutButtons />} />
+      <Sidebar footer={demo ? <DemoResetButton locale={prefs.locale} /> : <LogoutButtons />} />
       <div className="flex min-w-0 flex-1 flex-col">
         <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 sm:px-6 lg:px-10">
           <Header prefs={prefs} />
+          {demo ? <DemoNotice locale={prefs.locale} /> : null}
           <main id="main" tabIndex={-1} className="flex-1 pb-8 outline-none">
             {children}
           </main>
           <footer className="pb-28 text-xs text-text-muted lg:pb-8">{m.app.notTaxAdvice}</footer>
         </div>
       </div>
-      <MobileNav footer={<LogoutButtons />} />
+      <MobileNav footer={demo ? <DemoResetButton locale={prefs.locale} /> : <LogoutButtons />} />
     </div>
   );
+}
+
+async function loadSessionStatus(): Promise<SessionStatus> {
+  const supabase = await createClient();
+  const { data } = await supabase.rpc("session_status");
+  return (data ?? { is_owner: false, aal2: false, trusted: false }) as SessionStatus;
 }

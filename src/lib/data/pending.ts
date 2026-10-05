@@ -7,10 +7,12 @@ import type { Basis, ProposalKind } from "@/lib/bonds/proposals";
 import type { PendingRow, PendingStatus } from "@/lib/views/pending";
 import { D } from "@/lib/finance/money";
 import { createClient } from "@/lib/supabase/server";
+import { readAppMode } from "@/lib/demo/config";
 
 type Db = Awaited<ReturnType<typeof createClient>>;
 
 export async function loadPending(db?: Db): Promise<PendingRow[]> {
+  if (readAppMode(process.env).demo) return [];
   const client = db ?? (await createClient());
   const { data, error } = await client
     .from("pending_events")

@@ -6,6 +6,7 @@ import "server-only";
  * Any failure is no weather: the header then shows day or night by the clock.
  */
 import { realSources } from "@/lib/refresh/service";
+import { readAppMode } from "@/lib/demo/config";
 import { daylight, isFresh, parseWeather, type Weather, WEATHER_URL } from "./weather";
 
 export const WEATHER_TIMEOUT_MS = 3_000;
@@ -19,6 +20,7 @@ async function ask(get: typeof fetch, init: RequestInit) {
 }
 
 export async function currentWeather({ real = realSources(), fetch: get = fetch, now = new Date() } = {}): Promise<Weather | null> {
+  if (readAppMode(process.env).demo) return { ...FAKE_WEATHER, isDay: daylight(now) };
   if (!real) return { ...FAKE_WEATHER, isDay: daylight(now) };
   try {
     const cached = await ask(get, { next: { revalidate: WEATHER_REVALIDATE_S } });
