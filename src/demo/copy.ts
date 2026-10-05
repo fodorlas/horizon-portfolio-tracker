@@ -1,0 +1,108 @@
+import type { DemoState } from "./types";
+import { D } from "@/lib/finance/money";
+import { i18nFor } from "@/lib/i18n";
+
+const english = {
+  pageTitle: "Interactive portfolio demo",
+  tagline: "A personal portfolio tracker for every account, currency and asset class.",
+  demoNotice: "Sample data only. Changes stay in this tab and are cleared when the session ends.",
+  memoryNotice: "Sample data only. Changes stay in memory for this visit and are cleared when you leave.",
+  reset: "Reset demo",
+  liveLink: "How the live version works",
+  liveTitle: "The live version",
+  liveDescription: "The live app runs privately with Supabase Auth, verified TOTP and Row Level Security. This showcase uses fictional data in your browser and never connects to those services.",
+  value: "Portfolio value",
+  cash: "Cash",
+  invested: "Investments",
+  accounts: "Accounts",
+  valueHistory: "Value over time",
+  historySummary: "Sample portfolio value from {from} to {to}.",
+  chartTable: "View values as a table",
+  tableDate: "Date",
+  tableValue: "Portfolio value",
+  allocation: "Allocation",
+  holdings: "Positions",
+  account: "Account",
+  asset: "Asset",
+  units: "Units",
+  marketPrice: "Sample price",
+  positionValue: "Market value",
+  tradeTitle: "Record a trade",
+  tradeIntro: "Try a buy or sale. Account cash updates straight away.",
+  buy: "Buy",
+  sell: "Sell",
+  tradePrice: "Trade price",
+  saveTrade: "Save trade",
+  tradeSaved: "Trade added to this demo session.",
+  tradeError: "Check the trade details and try again.",
+  insufficientCash: "There is not enough cash in this account for that trade.",
+  insufficientUnits: "This account does not hold enough units to sell.",
+  recentActivity: "Recent activity",
+  noActivity: "No activity to show.",
+  samplePrices: "Sample prices",
+  displayCurrency: "Display currency",
+  kind: { stock: "Stock", etf: "ETF", bond: "Government bond", other: "Other" },
+  action: { buy: "Buy", sell: "Sell", deposit: "Deposit", dividend: "Dividend", interest: "Interest" },
+  estimate: "Portfolio-analysis estimates, not tax figures.",
+  selectAccount: "Choose an account",
+  selectAsset: "Choose an asset",
+  invalidTrade: "Enter a positive unit amount and price.",
+} as const;
+
+const hungarian = {
+  pageTitle: "Interaktív portfóliódemó",
+  tagline: "Személyes portfóliókövető minden számlához, devizához és eszközosztályhoz.",
+  demoNotice: "Csak mintaadatok. A változások ebben a lapban maradnak, és a munkamenet végén törlődnek.",
+  memoryNotice: "Csak mintaadatok. A változások csak erre a látogatásra maradnak meg a memóriában.",
+  reset: "Demó visszaállítása",
+  liveLink: "Így működik az éles változat",
+  liveTitle: "Az éles változat",
+  liveDescription: "Az éles alkalmazás privát, Supabase Auth-belépéssel, ellenőrzött TOTP-vel és Row Level Securityvel működik. Ez a bemutató kitalált adatokat használ a böngésződben, és nem kapcsolódik ezekhez a szolgáltatásokhoz.",
+  value: "Portfólióérték",
+  cash: "Készpénz",
+  invested: "Befektetések",
+  accounts: "Számlák",
+  valueHistory: "Vagyon alakulása",
+  historySummary: "A mintaportfólió értéke {from} és {to} között.",
+  chartTable: "Értékek táblázatos nézete",
+  tableDate: "Dátum",
+  tableValue: "Portfólióérték",
+  allocation: "Eszközmegoszlás",
+  holdings: "Pozíciók",
+  account: "Számla",
+  asset: "Eszköz",
+  units: "Darab",
+  marketPrice: "Mintaár",
+  positionValue: "Piaci érték",
+  tradeTitle: "Ügylet rögzítése",
+  tradeIntro: "Próbálj ki egy vételt vagy eladást. A számla készpénze azonnal változik.",
+  buy: "Vétel",
+  sell: "Eladás",
+  tradePrice: "Ügyleti ár",
+  saveTrade: "Ügylet rögzítése",
+  tradeSaved: "Az ügylet bekerült a demó munkamenetbe.",
+  tradeError: "Ellenőrizd az ügylet adatait, majd próbáld újra.",
+  insufficientCash: "Nincs elég készpénz ezen a számlán az ügylethez.",
+  insufficientUnits: "Ezen a számlán nincs elég eladható darab.",
+  recentActivity: "Legutóbbi műveletek",
+  noActivity: "Nincs megjeleníthető művelet.",
+  samplePrices: "Mintaárak",
+  displayCurrency: "Megjelenített deviza",
+  kind: { stock: "Részvény", etf: "ETF", bond: "Állampapír", other: "Egyéb" },
+  action: { buy: "Vétel", sell: "Eladás", deposit: "Befizetés", dividend: "Osztalék", interest: "Kamat" },
+  estimate: "Portfólióelemzési becslés, nem adózási adat.",
+  selectAccount: "Válassz számlát",
+  selectAsset: "Válassz eszközt",
+  invalidTrade: "Adj meg pozitív darabszámot és árat.",
+} as const;
+
+export const DEMO_COPY = { en: english, hu: hungarian } as const;
+export type DemoCopy = (typeof DEMO_COPY)[keyof typeof DEMO_COPY];
+
+export function formatDemoMoney(value: number, currency: DemoState["displayCurrency"], locale: DemoState["locale"]): string {
+  return i18nFor(locale).f.money(new D(value.toString()), currency);
+}
+
+export function formatDemoPrice(value: string | number, currency: DemoState["displayCurrency"], locale: DemoState["locale"]): string {
+  return i18nFor(locale).f.price(new D(value), currency);
+}

@@ -1,0 +1,40 @@
+# Monthly dependency updates (Budapest time). One grouped pull request carries every
+# minor and patch bump; a major version comes on its own, because it may need code
+# changes (for Next.js, read node_modules/next/dist/docs/ first). Security fixes come
+# as soon as GitHub reports them. Every update merges like any other PR: green CI and
+# the owner's "mehet".
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+      timezone: Europe/Budapest
+    open-pull-requests-limit: 5
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]
+    # Major versions the toolchain cannot take yet (checked 2026-09-29). Drop a rule
+    # when its reason is gone.
+    ignore:
+      # typescript-eslint (through eslint-config-next) supports TypeScript < 6.1: with 7 the lint cannot start.
+      - dependency-name: typescript
+        versions: [">=7"]
+      # eslint-plugin-react (through eslint-config-next) supports ESLint up to 9: with 10 the lint cannot start.
+      - dependency-name: eslint
+        versions: [">=10"]
+      # The Node types follow the runtime the tests run on (Node 24 in CI); they move with it.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+    commit-message:
+      prefix: deps
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+      timezone: Europe/Budapest
+    groups:
+      actions:
+        patterns: ["*"]
+    commit-message:
+      prefix: ci

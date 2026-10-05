@@ -1,0 +1,45 @@
+{
+  "_doc": "Shared cases for price selection (plan §3.3). Used by src/lib/finance/prices.test.ts and tests/rls/ledger.test.ts. Times are UTC; the day rule uses Europe/Budapest. Each instrument has a price source (plan §3.3, extended 2026-09-28): its price comes from that source and manual rows only (any source for a manual one); a manual correction counts only where the row it corrects counts, all the way down a chain of corrections. S is a paper switched from Yahoo to the BÉT.",
+  "instruments": {
+    "A": { "currency": "USD", "priceSource": "manual" },
+    "B": { "currency": "HUF", "priceSource": "manual" },
+    "S": { "currency": "EUR", "priceSource": "bet" }
+  },
+  "rows": [
+    { "key": "y1", "instrument": "A", "price": "340.10", "currency": "USD", "asOf": "2026-09-24T20:00:00Z", "enteredAt": "2026-09-24T21:00:00Z", "source": "yahoo", "status": "ok" },
+    { "key": "y2", "instrument": "A", "price": "341.07", "currency": "USD", "asOf": "2026-09-25T20:00:00Z", "enteredAt": "2026-09-25T21:00:00Z", "source": "yahoo", "status": "ok" },
+    { "key": "y3", "instrument": "A", "price": "0", "currency": "USD", "asOf": "2026-09-26T20:00:00Z", "enteredAt": "2026-09-26T21:00:00Z", "source": "yahoo", "status": "suspect" },
+    { "key": "y4", "instrument": "A", "price": "338.00", "currency": "USD", "asOf": "2026-09-23T20:00:00Z", "enteredAt": "2026-09-23T21:00:00Z", "source": "yahoo", "status": "ok" },
+    { "key": "k1", "instrument": "A", "price": "339.00", "currency": "USD", "asOf": "2026-09-23T20:00:00Z", "enteredAt": "2026-09-24T08:00:00Z", "source": "manual", "status": "ok", "supersedes": "y4", "note": "hibás Yahoo-ár javítása" },
+    { "key": "k2", "instrument": "A", "price": "342.00", "currency": "USD", "asOf": "2026-09-25T20:00:00Z", "enteredAt": "2026-09-26T08:00:00Z", "source": "manual", "status": "ok", "note": "kézi ár ugyanarra az időpontra" },
+    { "key": "b1", "instrument": "B", "price": "45870", "currency": "HUF", "asOf": "2026-09-25T22:30:00Z", "enteredAt": "2026-09-25T22:31:00Z", "source": "yahoo", "status": "ok" },
+    { "key": "sb1", "instrument": "S", "price": "21.05", "currency": "EUR", "asOf": "2026-09-22T21:59:59Z", "enteredAt": "2026-09-28T08:00:00Z", "source": "bet", "status": "ok" },
+    { "key": "sy2", "instrument": "S", "price": "20.50", "currency": "EUR", "asOf": "2026-09-23T21:59:59Z", "enteredAt": "2026-09-23T22:30:00Z", "source": "yahoo", "status": "ok" },
+    { "key": "sk1", "instrument": "S", "price": "20.60", "currency": "EUR", "asOf": "2026-09-23T21:59:59Z", "enteredAt": "2026-09-24T08:00:00Z", "source": "manual", "status": "ok", "supersedes": "sy2", "note": "a régi Yahoo-ár javítása" },
+    { "key": "sb2", "instrument": "S", "price": "21.10", "currency": "EUR", "asOf": "2026-09-24T21:59:59Z", "enteredAt": "2026-09-28T08:00:00Z", "source": "bet", "status": "ok" },
+    { "key": "sk2", "instrument": "S", "price": "21.20", "currency": "EUR", "asOf": "2026-09-24T21:59:59Z", "enteredAt": "2026-09-28T09:00:00Z", "source": "manual", "status": "ok", "supersedes": "sb2", "note": "a BÉT-ár javítása" },
+    { "key": "sm1", "instrument": "S", "price": "22.00", "currency": "EUR", "asOf": "2026-09-25T21:59:59Z", "enteredAt": "2026-09-26T08:00:00Z", "source": "manual", "status": "ok", "note": "kézi ár" },
+    { "key": "sb3", "instrument": "S", "price": "21.90", "currency": "EUR", "asOf": "2026-09-25T21:59:59Z", "enteredAt": "2026-09-28T08:00:00Z", "source": "bet", "status": "ok" },
+    { "key": "sb4", "instrument": "S", "price": "22.10", "currency": "EUR", "asOf": "2026-09-26T21:59:59Z", "enteredAt": "2026-09-28T08:00:00Z", "source": "bet", "status": "ok" },
+    { "key": "sy3", "instrument": "S", "price": "20.90", "currency": "EUR", "asOf": "2026-09-27T09:00:00Z", "enteredAt": "2026-09-27T09:01:00Z", "source": "yahoo", "status": "ok" },
+    { "key": "sk5", "instrument": "S", "price": "21.25", "currency": "EUR", "asOf": "2026-09-24T21:59:59Z", "enteredAt": "2026-09-28T10:00:00Z", "source": "manual", "status": "ok", "supersedes": "sk2", "note": "a javítás javítása" },
+    { "key": "sy4", "instrument": "S", "price": "20.95", "currency": "EUR", "asOf": "2026-09-28T21:59:59Z", "enteredAt": "2026-09-28T22:30:00Z", "source": "yahoo", "status": "ok" },
+    { "key": "sk3", "instrument": "S", "price": "20.96", "currency": "EUR", "asOf": "2026-09-28T21:59:59Z", "enteredAt": "2026-09-29T08:00:00Z", "source": "manual", "status": "ok", "supersedes": "sy4", "note": "a régi Yahoo-ár javítása" },
+    { "key": "sk4", "instrument": "S", "price": "20.97", "currency": "EUR", "asOf": "2026-09-28T21:59:59Z", "enteredAt": "2026-09-29T09:00:00Z", "source": "manual", "status": "ok", "supersedes": "sk3", "note": "a javítás javítása" }
+  ],
+  "cases": [
+    { "name": "latest market moment wins; same moment: manual beats automatic", "instrument": "A", "day": "2026-09-26", "expect": "k2" },
+    { "name": "a suspect quote is never selected", "instrument": "A", "day": "2026-09-27", "expect": "k2" },
+    { "name": "day D includes only quotes up to the end of D", "instrument": "A", "day": "2026-09-24", "expect": "y1" },
+    { "name": "a correction replaces the superseded quote", "instrument": "A", "day": "2026-09-23", "expect": "k1" },
+    { "name": "Budapest calendar: 22:30 UTC is already the next day", "instrument": "B", "day": "2026-09-25", "expect": null },
+    { "name": "…and it counts for that next day", "instrument": "B", "day": "2026-09-26", "expect": "b1" },
+    { "name": "nothing before the first quote", "instrument": "A", "day": "2026-09-20", "expect": null },
+    { "name": "a day without a BÉT trade keeps the last BÉT price; neither the old Yahoo close nor its correction takes over", "instrument": "S", "day": "2026-09-23", "expect": "sb1" },
+    { "name": "a correction of the own source's row wins, also when it is corrected again", "instrument": "S", "day": "2026-09-24", "expect": "sk5" },
+    { "name": "a manual price stays valid at its moment (manual beats automatic at the same moment)", "instrument": "S", "day": "2026-09-25", "expect": "sm1" },
+    { "name": "the next close of the own source replaces a manual price", "instrument": "S", "day": "2026-09-26", "expect": "sb4" },
+    { "name": "a later quote of the old source never takes over", "instrument": "S", "day": "2026-09-27", "expect": "sb4" },
+    { "name": "a correction of a correction of the old source's row does not take over either", "instrument": "S", "day": "2026-09-28", "expect": "sb4" }
+  ]
+}

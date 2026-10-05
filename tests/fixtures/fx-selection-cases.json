@@ -1,0 +1,43 @@
+{
+  "_doc": "Shared cases for FX selection (plan §3.1). Used by src/lib/finance/fx.test.ts and tests/rls/fx-selection.test.ts. Rates are compared to 10 decimal places.",
+  "rows": [
+    { "key": "m1", "base": "EUR", "quote": "HUF", "rate": "364.42", "rateDate": "2026-09-25", "source": "MNB", "status": "ok" },
+    { "key": "m2", "base": "USD", "quote": "HUF", "rate": "319.89", "rateDate": "2026-09-25", "source": "MNB", "status": "ok" },
+    { "key": "m3", "base": "EUR", "quote": "HUF", "rate": "366.24", "rateDate": "2026-09-24", "source": "MNB", "status": "ok" },
+    { "key": "m4", "base": "USD", "quote": "HUF", "rate": "321.80", "rateDate": "2026-09-24", "source": "MNB", "status": "ok" },
+    { "key": "m5", "base": "JPY", "quote": "HUF", "rate": "2.023", "rateDate": "2026-09-25", "source": "MNB", "status": "ok", "rawUnit": 100 },
+    { "key": "m6", "base": "EUR", "quote": "HUF", "rate": "999", "rateDate": "2026-09-26", "source": "MNB", "status": "suspect" },
+    { "key": "e1", "base": "EUR", "quote": "HUF", "rate": "365.28", "rateDate": "2026-09-26", "source": "ECB", "status": "ok" },
+    { "key": "e2", "base": "EUR", "quote": "USD", "rate": "1.1403", "rateDate": "2026-09-26", "source": "ECB", "status": "ok" },
+    { "key": "e3", "base": "EUR", "quote": "CHF", "rate": "0.93", "rateDate": "2026-09-26", "source": "ECB", "status": "ok" },
+    { "key": "c1", "base": "USD", "quote": "HUF", "rate": "321.50", "rateDate": "2026-09-24", "source": "manual", "status": "ok", "supersedes": "m4", "note": "MNB-hiba javítása" },
+    { "key": "s1", "base": "GBP", "quote": "HUF", "rate": "420", "rateDate": "2026-09-20", "source": "manual", "status": "ok", "note": "kézi" },
+    { "key": "b1", "base": "USD", "quote": "HUF", "rate": "318", "rateDate": "2026-09-26", "source": "broker", "status": "ok" }
+  ],
+  "cases": [
+    { "name": "Saturday: Friday's MNB wins over a fresher ECB and a suspect MNB row", "from": "EUR", "to": "HUF", "day": "2026-09-26",
+      "expect": { "kind": "rate", "source": "MNB", "method": "direct", "rateDate": "2026-09-25", "rate": "364.42", "rows": ["m1"] } },
+    { "name": "inverse is computed, not stored", "from": "HUF", "to": "EUR", "day": "2026-09-26",
+      "expect": { "kind": "rate", "source": "MNB", "method": "inverse", "rateDate": "2026-09-25", "rate": "0.0027440865", "rows": ["m1"] } },
+    { "name": "cross via HUF, both legs MNB on the same day", "from": "USD", "to": "EUR", "day": "2026-09-26",
+      "expect": { "kind": "rate", "source": "MNB", "method": "cross", "rateDate": "2026-09-25", "rate": "0.8778058284", "rows": ["m2", "m1"] } },
+    { "name": "a manual correction takes the superseded MNB slot", "from": "USD", "to": "HUF", "day": "2026-09-24",
+      "expect": { "kind": "rate", "source": "MNB", "method": "direct", "rateDate": "2026-09-24", "rate": "321.5", "rows": ["c1"] } },
+    { "name": "MNB cannot serve CHF: ECB cross via EUR", "from": "CHF", "to": "HUF", "day": "2026-09-26",
+      "expect": { "kind": "rate", "source": "ECB", "method": "cross", "rateDate": "2026-09-26", "rate": "392.7741935484", "rows": ["e3", "e1"] } },
+    { "name": "only a standalone manual rate exists", "from": "GBP", "to": "HUF", "day": "2026-09-26",
+      "expect": { "kind": "rate", "source": "manual", "method": "direct", "rateDate": "2026-09-20", "rate": "420", "rows": ["s1"] } },
+    { "name": "older than 10 days is not used", "from": "GBP", "to": "HUF", "day": "2026-10-05",
+      "expect": { "kind": "missing" } },
+    { "name": "MNB outside the window, suspect excluded: ECB", "from": "EUR", "to": "HUF", "day": "2026-10-06",
+      "expect": { "kind": "rate", "source": "ECB", "method": "direct", "rateDate": "2026-09-26", "rate": "365.28", "rows": ["e1"] } },
+    { "name": "never a future rate", "from": "EUR", "to": "HUF", "day": "2026-09-23",
+      "expect": { "kind": "missing" } },
+    { "name": "per-100 quotes are stored normalised", "from": "JPY", "to": "HUF", "day": "2026-09-25",
+      "expect": { "kind": "rate", "source": "MNB", "method": "direct", "rateDate": "2026-09-25", "rate": "2.023", "rows": ["m5"] } },
+    { "name": "same currency", "from": "HUF", "to": "HUF", "day": "2026-09-26",
+      "expect": { "kind": "identity" } },
+    { "name": "broker rates never take part", "from": "USD", "to": "HUF", "day": "2026-09-26",
+      "expect": { "kind": "rate", "source": "MNB", "method": "direct", "rateDate": "2026-09-25", "rate": "319.89", "rows": ["m2"] } }
+  ]
+}

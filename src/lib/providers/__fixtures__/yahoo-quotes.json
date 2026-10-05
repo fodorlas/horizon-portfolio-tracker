@@ -1,0 +1,29 @@
+[
+  {
+    "symbol": "AAPL",
+    "shortName": "Apple Inc.",
+    "currency": "USD",
+    "exchange": "NMS",
+    "quoteType": "EQUITY",
+    "regularMarketPrice": 341.07,
+    "regularMarketTime": "2026-09-25T20:00:01.000Z"
+  },
+  {
+    "symbol": "OTP.BD",
+    "shortName": "OTP",
+    "currency": "HUF",
+    "exchange": "BUD",
+    "quoteType": "EQUITY",
+    "regularMarketPrice": 45870,
+    "regularMarketTime": "2026-09-25T15:08:37.000Z"
+  },
+  {
+    "symbol": "VWCE.DE",
+    "shortName": "Vanguard FTSE All-World U.ETF R",
+    "currency": "EUR",
+    "exchange": "GER",
+    "quoteType": "ETF",
+    "regularMarketPrice": 169.74,
+    "regularMarketTime": "2026-09-25T15:35:57.000Z"
+  }
+]
