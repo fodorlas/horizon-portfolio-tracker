@@ -64,14 +64,14 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          persist-credentials: false
       - name: Run gitleaks on the full history
         run: |
-          curl --fail --silent --show-error --location --output "$RUNNER_TEMP/gitleaks.tar.gz" https://github.com/gitleaks/gitleaks/releases/download/v8.30.0/gitleaks_8.30.0_linux_x64.tar.gz
-          printf '%s  %s\n' '79a3ab579b53f71efd634f3aaf7e04a0fa0cf206b7ed434638d1547a2470a66e' "$RUNNER_TEMP/gitleaks.tar.gz" | sha256sum --check
-          tar -xzf "$RUNNER_TEMP/gitleaks.tar.gz" gitleaks
           printf 'token = "ghp_%s%s%s"\n' 'aBcDeFgHiJkL' 'mNoPqRsTuVwX' 'yZ0123456789' > "$RUNNER_TEMP/gitleaks-canary.txt"
+          image='ghcr.io/gitleaks/gitleaks@sha256:75bdb2b2f4db213cde0b8295f13a88d6b333091bbfbf3012a4e083d00d31caba'
+          docker pull "$image"
           set +e
-          ./gitleaks detect --no-git --source "$RUNNER_TEMP/gitleaks-canary.txt" --redact --report-format json --report-path "$RUNNER_TEMP/gitleaks-canary.json" > "$RUNNER_TEMP/gitleaks-canary.log" 2>&1
+          docker run --rm --network none --volume "$RUNNER_TEMP:/tmp" "$image" detect --no-git --source /tmp/gitleaks-canary.txt --redact --report-format json --report-path /tmp/gitleaks-canary.json > "$RUNNER_TEMP/gitleaks-canary.log" 2>&1
           scan_status=$?
           set -e
           if [ "$scan_status" -ne 1 ] || ! jq --exit-status 'any(.[]; .RuleID == "github-pat")' "$RUNNER_TEMP/gitleaks-canary.json" >/dev/null; then
@@ -79,4 +79,4 @@ jobs:
             echo 'A Gitleaks-próba nem igazolta a GitHub-token felismerését.'
             exit 1
           fi
-          ./gitleaks git --redact --verbose --exit-code 1 .
+          docker run --rm --network none --volume "$GITHUB_WORKSPACE:/repo:ro" --workdir /repo "$image" git --redact --verbose --exit-code 1 .
