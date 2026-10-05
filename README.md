@@ -13,18 +13,9 @@ All data shown in the screenshots and preview is fictional. The screenshots show
 
 ## Try the demo
 
-**[Try the live demo](https://horizon-portfolio-tracker.vercel.app/)** in your browser.
+**[Open the live demo on Vercel](https://horizon-portfolio-tracker.vercel.app/)** to explore Horizon in your browser without installing anything.
 
 The preview uses the full Horizon interface in read-only mode. No account or database is required, and it uses fictional data without making requests to external services. **Reset demo** clears display preferences and returns to the overview.
-
-To run it locally:
-
-```bash
-npm ci
-DEMO_MODE=true NEXT_PUBLIC_DEMO_MODE=true npm run dev
-```
-
-Then open [http://localhost:3100](http://localhost:3100).
 
 ## Product and engineering decisions
 
@@ -40,6 +31,17 @@ The application code also includes a Supabase-backed mode. Its access model uses
 Next.js App Router · TypeScript · Supabase · PostgreSQL · Vitest · Playwright
 
 ## Development and checks
+
+### Run the demo locally
+
+```bash
+npm ci
+DEMO_MODE=true NEXT_PUBLIC_DEMO_MODE=true npm run dev
+```
+
+Open `http://localhost:3100` on the computer running the server.
+
+### Run the checks
 
 ```bash
 npm ci
@@ -71,4 +73,4 @@ Released under the MIT Licence. See [LICENSE](LICENSE).
 
 A Horizon személyes portfóliókövető, amellyel több számlán, devizában és eszközosztályban tartott befektetés követhető egy helyen. Megjeleníti az állományokat, a számlapénzt, a tranzakciókat és a portfólió alakulását.
 
-A [böngészős demó](https://horizon-portfolio-tracker.vercel.app/) a Horizon tényleges képernyőit mutatja kitalált adatokkal, csak olvasható módban. Nem kell hozzá fiók vagy adatbázis, nem kapcsolódik külső szolgáltatáshoz, és az írási kéréseket letiltja. A „Demó visszaállítása” törli a megjelenítési beállításokat, és visszatér az Áttekintéshez. Az éles alkalmazás Next.js App Router, TypeScript, Supabase és PostgreSQL technológiákra épül; a hitelesítést ellenőrzött TOTP-kód, az adatbázis-hozzáférést Row Level Security védi.
+A [Vercelen elérhető böngészős demó](https://horizon-portfolio-tracker.vercel.app/) a Horizon tényleges képernyőit mutatja kitalált adatokkal, csak olvasható módban. Nem kell hozzá fiók vagy adatbázis, nem kapcsolódik külső szolgáltatáshoz, és az írási kéréseket letiltja. A „Demó visszaállítása” törli a megjelenítési beállításokat, és visszatér az Áttekintéshez. Az éles alkalmazás Next.js App Router, TypeScript, Supabase és PostgreSQL technológiákra épül; a hitelesítést ellenőrzött TOTP-kód, az adatbázis-hozzáférést Row Level Security védi.
