@@ -64,3 +64,9 @@ AI tools supported implementation and code review. I set the product scope and f
 ## Licence
 
 Released under the MIT Licence. See [LICENSE](LICENSE).
+
+## Magyar összefoglaló
+
+A Horizon személyes portfóliókövető, amellyel több számlán, devizában és eszközosztályban tartott befektetés követhető egy helyen. Megjeleníti az állományokat, a számlapénzt, a tranzakciókat és a portfólió alakulását.
+
+A demo fiók és adatbázis nélkül próbálható ki: mintaadatokat használ, a módosítások az aktuális böngészőlap munkamenetében maradnak, és nem küld kérést külső szolgáltatásnak. A teljes alkalmazás Next.js App Router, TypeScript, Supabase és PostgreSQL technológiákra épül; a hitelesítést ellenőrzött TOTP-kód, az adatbázishozzáférést Row Level Security védi.
