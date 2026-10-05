@@ -79,4 +79,4 @@ jobs:
             echo 'A Gitleaks-próba nem igazolta a GitHub-token felismerését.'
             exit 1
           fi
-          docker run --rm --network none --volume "$GITHUB_WORKSPACE:/repo:ro" --workdir /repo "$image" git --redact --verbose --exit-code 1 .
+          docker run --rm --network none --volume "$GITHUB_WORKSPACE:/repo:ro" --workdir /repo "$image" detect --redact --verbose --exit-code 1 --source .
